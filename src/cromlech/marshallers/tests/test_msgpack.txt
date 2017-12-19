@@ -1,0 +1,48 @@
+Msgpack Marshaller
+==================
+
+  >>> from cromlech.marshallers import MsgpackMarshaller
+
+  >>> marshaller = MsgpackMarshaller()
+  >>> marshaller.dumps([1, "two", 3])
+  b'\x93\x01\xa3two\x03'
+
+  >>> struct = {
+  ... "Accept-Language": "en-US,en;q=0.8",
+  ... "Host": "headers.jsontest.com",
+  ... "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+  ... "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8"
+  ... }
+
+  >>> data =  marshaller.dumps(struct)
+  >>> assert marshaller.loads(data) == {'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8', 'Host': 'headers.jsontest.com', 'Accept-Language': 'en-US,en;q=0.8', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'}
+  
+
+As for now, the JSON marshaller can convert datetime and date.
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> structure = {
+  ...    'datetime': mydatetime,
+  ... }
+
+  >>> data = marshaller.dumps(structure)
+  >>> marshaller.loads(data)
+  {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
+
+
+We can use the marshaller as a decorator
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return [1, 2, "three", 12.145]
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  b'\x94\x01\x02\xa5three\xcb@(J=p\xa3\xd7\n'
+
+  >>> marshaller.loads(my_renderer())
+  [1, 2, 'three', 12.145]

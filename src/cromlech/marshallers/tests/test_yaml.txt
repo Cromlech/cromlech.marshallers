@@ -1,0 +1,47 @@
+YAML Marshaller
+===============
+
+YAML can handle most of the python structures.
+
+  >>> from cromlech.marshallers import YAMLMarshaller
+
+  >>> marshaller = YAMLMarshaller()
+  >>> data = marshaller.dumps({'test': 'this is a test'})
+  >>> data
+  '{test: this is a test}\n'
+
+  >>> marshaller.loads(data)
+  {'test': 'this is a test'}
+
+
+Our usual date/datetime test is trivial for YAML :
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> structure = {
+  ...    'datetime': mydatetime,
+  ... }
+
+  >>> data = marshaller.dumps(structure)
+  >>> data
+  "{datetime: !!timestamp '2017-12-19 11:30:25'}\n"
+
+  >>> marshaller.loads(data)
+  {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
+
+
+We can use the marshaller as a decorator :
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return {"three": 12.145}
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  '{three: 12.145}\n'
+
+  >>> marshaller.loads(my_renderer())
+  {'three': 12.145}

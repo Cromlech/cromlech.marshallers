@@ -1,36 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import functools
-from zope.interface import Interface, provider
 
 
-class IMarshaller(Interface):
-    """Definition of a data marshaller.
-    """
-
-    def load(string):
-        """Document me.
-        """
-    
-    def loads(fd):
-        """Document me.
-        """
-
-    def dump(struct):
-        """Document me.
-        """
-    
-    def dumps(struct, fd):
-        """Document me.
-        """
-
-    def wraps(func):
-        """Document me.
-        """
-
-
-@provider(IMarshaller)
 class Marshaller(object):
+    """Marshaller prototype.
+    """
 
     @staticmethod
     def load(string):
@@ -54,3 +29,13 @@ class Marshaller(object):
             result = func(*args, **kwargs)
             return self.dumps(result)
         return marshalled_wrapper
+
+    @classmethod
+    def load_from(cls, path):
+        with open(path, 'r') as fd:
+            return cls.load(fd)
+
+    @classmethod
+    def dump_to(cls, data, path):
+        with open(path, 'w') as fd:
+            cls.dump(data, fd)

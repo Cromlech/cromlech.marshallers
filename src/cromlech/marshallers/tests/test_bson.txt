@@ -1,0 +1,47 @@
+BSON Marshaller
+===============
+
+WARNING : The BSON marshaller can only handle dict-like structures.
+
+  >>> from cromlech.marshallers import BSONMarshaller
+
+  >>> marshaller = BSONMarshaller()
+  >>> data = marshaller.dumps({'test': 'this is a test'})
+  >>> data
+  b'\x1e\x00\x00\x00\x02test\x00\x0f\x00\x00\x00this is a test\x00\x00'
+
+  >>> marshaller.loads(data)
+  {'test': 'this is a test'}
+
+
+As for now, the BSON marshaller can convert datetime but not date.
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> structure = {
+  ...    'datetime': mydatetime,
+  ... }
+
+  >>> data = marshaller.dumps(structure)
+  >>> data
+  b'\x17\x00\x00\x00\tdatetime\x00h\xfc\x89n`\x01\x00\x00\x00'
+
+  >>> marshaller.loads(data)
+  {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25, tzinfo=<UTC>)}
+
+
+We can use the marshaller as a decorator
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return {"three": 12.145}
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  b'\x14\x00\x00\x00\x01three\x00\n\xd7\xa3p=J(@\x00'
+
+  >>> marshaller.loads(my_renderer())
+  {'three': 12.145}

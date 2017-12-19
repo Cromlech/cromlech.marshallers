@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import marshal
-from .interface import Marshaller
+from .prototype import Marshaller
 
 
 class MarshalMarshaller(Marshaller):

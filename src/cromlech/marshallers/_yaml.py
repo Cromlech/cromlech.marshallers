@@ -6,7 +6,7 @@ except ImportError:
     # FIXME: debug log.
     pass
 else:
-    from .interface import Marshaller
+    from .prototype import Marshaller
 
 
     class YAMLMarshaller(Marshaller):

@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .interface import Marshaller
-try:
-    import cPickle as pickle    #  python 2.x
-except ImportError:
-    import pickle               #  python 3.x
+import pickle
+from .prototype import Marshaller
 
 
 class PickleMarshaller(Marshaller):

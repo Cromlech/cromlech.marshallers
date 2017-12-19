@@ -2,27 +2,27 @@
 
 import json
 import datetime
-from .interface import Marshaller
+from .prototype import Marshaller
 
 
 def decode_custom(obj):
-    custom_type = date.get('__custom__')
+    custom_type = obj.get('__custom__')
     if custom_type == 'datetime':
         obj = datetime.datetime.strptime(
-            obj["as_str"], "%Y%m%dT%H:%M:%S.%f")
+            obj["payload"], "%Y%m%dT%H:%M:%S.%f")
     elif custom_type == 'date':
         obj = datetime.datetime.strptime(
-            obj["as_str"], "%Y%m%d").date()
+            obj["payload"], "%Y%m%d").date()
     return obj
 
 
 def encode_custom(obj):
     if isinstance(obj, datetime.datetime):
         return {'__custom__': 'datetime',
-                'as_str': obj.strftime("%Y%m%dT%H:%M:%S.%f")}
+                'payload': obj.strftime("%Y%m%dT%H:%M:%S.%f")}
     if isinstance(obj, datetime.date):
         return {'__custom__': 'date',
-                'as_str': obj.strftime("%Y%m%d")}
+                'payload': obj.strftime("%Y%m%d")}
     return obj
 
 
@@ -40,11 +40,9 @@ class JSONMarshaller(Marshaller):
         return json.dumps(struct, default=encode_custom)
 
     @staticmethod
-    def load(path):
-        with open(path, 'r') as fd:
-            return json.load(fd, object_hook=decode_custom)
+    def load(fd):
+        return json.load(fd, object_hook=decode_custom)
 
     @staticmethod
-    def dump(data, path):
-        with open(path, 'w') as fd:
-            json.dump(data, fd, default=encode_custom)
+    def dump(data, fd):
+        json.dump(data, fd, default=encode_custom)

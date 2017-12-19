@@ -1,0 +1,41 @@
+Marshal Marshaller
+==================
+
+  >>> from cromlech.marshallers import MarshalMarshaller
+
+  >>> marshaller = MarshalMarshaller()
+  >>> data = marshaller.dumps({'test': 'this is a test'})
+  >>> data
+  b'\xfb\xda\x04test\xfa\x0ethis is a test0'
+
+  >>> marshaller.loads(data)
+  {'test': 'this is a test'}
+
+
+Marshal can handle only the most basic python types.
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> import pytest
+  >>> with pytest.raises(ValueError) as exc:
+  ...     data = marshaller.dumps(mydatetime)
+
+  >>> exc.value
+  ValueError('unmarshallable object',)
+
+
+We can use the marshaller as a decorator
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return {"three": 12.145}
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  b'\xfb\xda\x05three\xe7\n\xd7\xa3p=J(@0'
+
+  >>> marshaller.loads(my_renderer())
+  {'three': 12.145}

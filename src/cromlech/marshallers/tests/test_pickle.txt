@@ -1,0 +1,47 @@
+Pickle Marshaller
+=================
+
+Pickle can handle most of the python native structures.
+
+  >>> from cromlech.marshallers import PickleMarshaller
+
+  >>> marshaller = PickleMarshaller()
+  >>> data = marshaller.dumps({'test': 'this is a test'})
+  >>> data
+  b'\x80\x03}q\x00X\x04\x00\x00\x00testq\x01X\x0e\x00\x00\x00this is a testq\x02s.'
+
+  >>> marshaller.loads(data)
+  {'test': 'this is a test'}
+
+
+Our usual date/datetime test is trivial for YAML :
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> structure = {
+  ...    'datetime': mydatetime,
+  ... }
+
+  >>> data = marshaller.dumps(structure)
+  >>> data
+  b'\x80\x03}q\x00X\x08\x00\x00\x00datetimeq\x01cdatetime\ndatetime\nq\x02C\n\x07\xe1\x0c\x13\x0b\x1e\x19\x00\x00\x00q\x03\x85q\x04Rq\x05s.'
+
+  >>> marshaller.loads(data)
+  {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
+
+
+We can use the marshaller as a decorator :
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return {"three": 12.145}
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  b'\x80\x03}q\x00X\x05\x00\x00\x00threeq\x01G@(J=p\xa3\xd7\ns.'
+
+  >>> marshaller.loads(my_renderer())
+  {'three': 12.145}

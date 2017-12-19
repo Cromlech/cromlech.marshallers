@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .interface import IMarshaller, Marshaller
+from .prototype import Marshaller
 
 # builtin marshallers
 from ._json import JSONMarshaller

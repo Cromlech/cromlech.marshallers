@@ -1,0 +1,47 @@
+RapidJSON Marshaller
+====================
+
+  >>> from cromlech.marshallers import RapidJSONMarshaller
+
+  >>> marshaller = RapidJSONMarshaller()
+  >>> marshaller.dumps([1, "two", 3])
+  '[1,"two",3]'
+
+  >>> json_string = '''{
+  ... "Accept-Language": "en-US,en;q=0.8",
+  ... "Host": "headers.jsontest.com",
+  ... "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+  ... "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8"
+  ... }'''
+
+  >>> assert marshaller.loads(json_string) == {'Host': 'headers.jsontest.com', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-US,en;q=0.8'}
+
+
+As for now, the JSON marshaller can convert datetime and date.
+
+  >>> from datetime import datetime
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+
+  >>> structure = {
+  ...    'datetime': mydatetime,
+  ... }
+
+  >>> data = marshaller.dumps(structure)
+  >>> marshaller.loads(data)
+  {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
+
+
+We can use the marshaller as a decorator
+
+  >>> @marshaller.wraps
+  ... def my_renderer():
+  ...     return [1, 2, "three", 12.145]
+
+  >>> my_renderer
+  <function my_renderer at ...>
+
+  >>> my_renderer()
+  '[1,2,"three",12.145]'
+
+  >>> marshaller.loads(my_renderer())
+  [1, 2, 'three', 12.145]

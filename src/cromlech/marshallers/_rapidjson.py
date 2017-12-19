@@ -6,8 +6,8 @@ except ImportError:
     # FIXME: debug log.
     pass
 else:
-    from .interface import Marshaller
-    from .cm_json import encode_custom, decode_custom
+    from .prototype import Marshaller
+    from ._json import encode_custom, decode_custom
 
 
     class RapidJSONMarshaller(Marshaller):

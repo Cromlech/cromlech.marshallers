@@ -11,7 +11,6 @@ tests_require = [
 
 install_requires = [
     'setuptools',
-    'zope.interface',
 ]
 
 yaml_requires = [
@@ -19,7 +18,7 @@ yaml_requires = [
 ]
 
 rapidjson_requires = [
-    'pyrapidjson >= 0.5.1',
+    'python-rapidjson >= 0.2.7',
 ]
 
 msgpack_requires = [
