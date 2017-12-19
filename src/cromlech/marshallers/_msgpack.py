@@ -25,15 +25,13 @@ else:
                 struct, default=encode_custom, use_bin_type=True)
     
         @staticmethod
-        def load(path):
-            with open(path, 'rb') as fd:
-                data = fd.read()
+        def load(fd):
+            data = fd.read()
             return msgpack.unpackb(
                 data, object_hook=decode_custom, encoding='utf-8')
 
         @staticmethod
-        def dump(struct, path):
+        def dump(struct, fd):
             packed = msgpack.packb(
                 struct, default=encode_custom, use_bin_type=True)
-            with open(path, 'wb') as fd:
-                fd.write(packed)
+            fd.write(packed)

@@ -20,13 +20,11 @@ else:
             return bson.dumps(struct)
 
         @staticmethod
-        def load(path):
-            with open(path, 'rb') as fd:
-                data = fd.read()
+        def load(fd):
+            data = fd.read()
             return bson.loads(data)
 
         @staticmethod
-        def dump(struct, path):
+        def dump(struct, fd):
             data = bson.dumps(struct)
-            with open(path, 'wb') as fd:
-                fd.write(data)
+            fd.write(data)

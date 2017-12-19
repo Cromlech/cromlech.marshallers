@@ -23,12 +23,9 @@ else:
             return rapidjson.dumps(struct, default=encode_custom)
     
         @staticmethod
-        def load(path):
-            with open(path, 'rb') as fd:
-                data = rapidjson.loads(data, fd, object_hook=decode_custom)
-            return data
+        def load(fd):
+            return rapidjson.loads(data, fd, object_hook=decode_custom)
 
         @staticmethod
-        def dump(struct, path):
-            with open(path, 'wb') as fd:
-                rapidjson.dump(struct, fd, default=encode_custom)
+        def dump(struct, fd):
+            rapidjson.dump(struct, fd, default=encode_custom)

@@ -20,12 +20,9 @@ else:
             return yaml.dump(struct)
 
         @staticmethod
-        def load(path):
-            with open(path, 'rb') as fd:
-                data = yaml.load(data, stream=fd)
-            return data
+        def load(fd):
+            return yaml.load(data, stream=fd)
 
         @staticmethod
-        def dump(struct, path):
-            with open(path, 'wb') as fd:
-                data = yaml.dump(struct, stream=fd)
+        def dump(struct, fd):
+            yaml.dump(struct, stream=fd)

@@ -15,11 +15,9 @@ class PickleMarshaller(Marshaller):
         return pickle.dumps(struct)
     
     @staticmethod
-    def load(path):
-        with open(path, 'rb') as fd:
-            return pickle.load(fd)
+    def load(fd):
+        return pickle.load(fd)
 
     @staticmethod
-    def dump(data, path):
-        with open(path, 'wb') as fd:
-            pickle.dump(data, fd)
+    def dump(data, fd):
+        pickle.dump(data, fd)

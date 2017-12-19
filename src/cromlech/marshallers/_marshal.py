@@ -16,11 +16,9 @@ class MarshalMarshaller(Marshaller):
         return marshal.dumps(struct)
 
     @staticmethod
-    def load(path):
-        with open(path, 'r') as fd:
-            return marshal.load(fd)
+    def load(fd):
+        return marshal.load(fd)
 
     @staticmethod
-    def dump(data, path):
-        with open(path, 'w') as fd:
-            marshal.dump(data, fd)
+    def dump(data, fd):
+        marshal.dump(data, fd)
