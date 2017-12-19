@@ -11,6 +11,8 @@ else:
     
     class BSONMarshaller(Marshaller):
 
+        binary = True
+
         @staticmethod
         def loads(string):
             return bson.loads(string)

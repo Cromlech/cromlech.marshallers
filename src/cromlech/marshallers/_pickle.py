@@ -6,6 +6,8 @@ from .prototype import Marshaller
 
 class PickleMarshaller(Marshaller):
 
+    binary = True
+
     @staticmethod
     def loads(string):
         return pickle.loads(string)

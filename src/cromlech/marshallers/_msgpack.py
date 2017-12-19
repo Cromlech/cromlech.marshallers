@@ -14,6 +14,9 @@ else:
         """Base Marshaller using msgpack.
         It provides an out-of-the-box date/datetime encoder/decoder.
         """
+
+        binary = True
+
         @staticmethod
         def loads(string):
             return msgpack.unpackb(

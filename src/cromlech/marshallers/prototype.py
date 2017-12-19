@@ -7,6 +7,8 @@ class Marshaller(object):
     """Marshaller prototype.
     """
 
+    binary = False
+    
     @staticmethod
     def load(string):
         raise NotImplementedError
@@ -25,13 +27,15 @@ class Marshaller(object):
 
     @classmethod
     def load_from(cls, path):
-        with open(path, 'r') as fd:
+        mode = cls.binary and 'rb' or 'r'
+        with open(path, mode) as fd:
             data = cls.load(fd)
         return data
 
     @classmethod
     def dump_to(cls, data, path):
-        with open(path, 'w') as fd:
+        mode = cls.binary and 'wb' or 'w'
+        with open(path, mode) as fd:
             cls.dump(data, fd)
 
     def wraps(self, func):

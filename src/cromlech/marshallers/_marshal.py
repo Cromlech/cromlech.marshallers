@@ -7,6 +7,9 @@ from .prototype import Marshaller
 class MarshalMarshaller(Marshaller):
     """Very basic `marshal` marshaller.
     """
+
+    binary = True
+
     @staticmethod
     def loads(string):
         return marshal.loads(string)
