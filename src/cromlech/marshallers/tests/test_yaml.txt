@@ -1,5 +1,17 @@
 YAML Marshaller
-===============
+***************
+
+  >>> from cromlech.marshallers import YAMLMarshaller
+  >>> marshaller = YAMLMarshaller()
+
+The `yaml` marshaller handles data as a string:
+
+  >>> marshaller.binary
+  False
+
+
+Straightforward dump/load
+=========================
 
 YAML can handle most of the python structures.
 
@@ -13,6 +25,9 @@ YAML can handle most of the python structures.
   >>> marshaller.loads(data)
   {'test': 'this is a test'}
 
+
+Non-basic types
+---------------
 
 Our usual date/datetime test is trivial for YAML :
 
@@ -31,6 +46,9 @@ Our usual date/datetime test is trivial for YAML :
   {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
 
 
+Decorator
+---------
+
 We can use the marshaller as a decorator :
 
   >>> @marshaller.wraps
@@ -45,3 +63,55 @@ We can use the marshaller as a decorator :
 
   >>> marshaller.loads(my_renderer())
   {'three': 12.145}
+
+
+Streams and files
+=================
+
+Each marshaller has 4 methods devoted to handling file or stream.
+`dump` and `load` work with streams. `dump_to` and `load_from` work
+with filesystem paths.
+
+
+Files
+-----
+
+  >>> import os
+  >>> path = str(getfixture('tmpdir'))
+  >>> filepath = os.path.join(path, 'data.yaml')
+
+  >>> struct = [1, "two", 3.00001]
+  >>> marshaller.dump_to(struct, filepath)
+
+The `dump_to` method is in charge of writing the data in the file.
+We can load the content of this file using the `load_from` method :
+
+  >>> marshaller.load_from(filepath)
+  [1, 'two', 3.00001]
+
+We can check manually the content of the file :
+
+  >>> with open(filepath, 'r') as fd:
+  ...     fd.read()
+  '[1, two, 3.00001]\n'
+
+
+Streams
+--------
+
+The `dump` method is in charge writing the data in the stream.
+We can interpret the content of this stream using the `load` method.
+We use a string stream since our marshaller handles non-binary data.
+
+  >>> from io import StringIO
+  >>> stream = StringIO()
+
+  >>> marshaller.dump(struct, stream)
+  >>> stream.getvalue()
+  '[1, two, 3.00001]\n'
+
+We now return to the offset 0 of the file and we can load it:
+
+  >>> assert stream.seek(0) == 0
+  >>> marshaller.load(stream)
+  [1, 'two', 3.00001]

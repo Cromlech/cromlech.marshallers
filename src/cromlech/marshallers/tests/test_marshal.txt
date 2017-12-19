@@ -1,9 +1,21 @@
 Marshal Marshaller
-==================
+******************
 
   >>> from cromlech.marshallers import MarshalMarshaller
-
   >>> marshaller = MarshalMarshaller()
+
+The `msgpack` marshaller handles binary data :
+
+  >>> marshaller.binary
+  True
+
+
+Straightforward dump/load
+=========================
+
+Respecting the conventions set by the `marshal` and `json` native
+packages, we use the `dumps` and `loads` to handle bytes.
+
   >>> data = marshaller.dumps({'test': 'this is a test'})
   >>> data
   b'\xfb\xda\x04test\xfa\x0ethis is a test0'
@@ -11,6 +23,9 @@ Marshal Marshaller
   >>> marshaller.loads(data)
   {'test': 'this is a test'}
 
+
+Non-basic types
+---------------
 
 Marshal can handle only the most basic python types.
 
@@ -24,6 +39,9 @@ Marshal can handle only the most basic python types.
   >>> exc.value
   ValueError('unmarshallable object',)
 
+
+Decorator
+---------
 
 We can use the marshaller as a decorator
 
@@ -39,3 +57,55 @@ We can use the marshaller as a decorator
 
   >>> marshaller.loads(my_renderer())
   {'three': 12.145}
+
+
+Streams and files
+=================
+
+Each marshaller has 4 methods devoted to handling file or stream.
+`dump` and `load` work with streams. `dump_to` and `load_from` work
+with filesystem paths.
+
+
+Files
+-----
+
+  >>> import os
+  >>> path = str(getfixture('tmpdir'))
+  >>> filepath = os.path.join(path, 'data.mhr')
+
+  >>> struct = [1, "two", 3.00001]
+  >>> marshaller.dump_to(struct, filepath)
+
+The `dump_to` method is in charge of writing the data in the file.
+We can load the content of this file using the `load_from` method :
+
+  >>> marshaller.load_from(filepath)
+  [1, 'two', 3.00001]
+
+We can check manually the content of the file :
+
+  >>> with open(filepath, 'rb') as fd:
+  ...     fd.read()
+  b'\xdb\x03\x00\x00\x00\xe9\x01\x00\x00\x00Z\x03twog9b->\x05\x00\x08@'
+
+
+Streams
+--------
+
+The `dump` method is in charge writing the data in the stream.
+We can interpret the content of this stream using the `load` method.
+We use a binary stream since our marshaller handles binary data.
+
+  >>> from io import BytesIO
+  >>> stream = BytesIO()
+
+  >>> marshaller.dump(struct, stream)
+  >>> stream.getvalue()
+  b'\xdb\x03\x00\x00\x00\xe9\x01\x00\x00\x00Z\x03twog9b->\x05\x00\x08@'
+
+We now return to the offset 0 of the file and we can load it:
+
+  >>> assert stream.seek(0) == 0
+  >>> marshaller.load(stream)
+  [1, 'two', 3.00001]

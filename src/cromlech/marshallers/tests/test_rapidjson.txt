@@ -1,9 +1,21 @@
 RapidJSON Marshaller
-====================
+********************
 
   >>> from cromlech.marshallers import RapidJSONMarshaller
-
   >>> marshaller = RapidJSONMarshaller()
+
+The `rapidjson` marshaller handles data as a string:
+
+  >>> marshaller.binary
+  False
+
+
+Straightforward dump/load
+=========================
+
+Respecting the conventions set by the `marshal` and `json` native
+packages, we use the `dumps` and `loads` to handle string or bytes.
+
   >>> marshaller.dumps([1, "two", 3])
   '[1,"two",3]'
 
@@ -14,8 +26,16 @@ RapidJSON Marshaller
   ... "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8"
   ... }'''
 
-  >>> assert marshaller.loads(json_string) == {'Host': 'headers.jsontest.com', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3', 'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-US,en;q=0.8'}
+  >>> assert marshaller.loads(json_string) == {
+  ...     'Host': 'headers.jsontest.com',
+  ...     'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+  ...     'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+  ...     'Accept-Language': 'en-US,en;q=0.8'
+  ... }
 
+
+Non-basic types
+---------------
 
 As for now, the JSON marshaller can convert datetime and date.
 
@@ -31,6 +51,9 @@ As for now, the JSON marshaller can convert datetime and date.
   {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
 
 
+Decorator
+---------
+
 We can use the marshaller as a decorator
 
   >>> @marshaller.wraps
@@ -45,3 +68,55 @@ We can use the marshaller as a decorator
 
   >>> marshaller.loads(my_renderer())
   [1, 2, 'three', 12.145]
+
+
+Streams and files
+=================
+
+Each marshaller has 4 methods devoted to handling file or stream.
+`dump` and `load` work with streams. `dump_to` and `load_from` work
+with filesystem paths.
+
+
+Files
+-----
+
+  >>> import os
+  >>> path = str(getfixture('tmpdir'))
+  >>> filepath = os.path.join(path, 'data.rjson')
+
+  >>> struct = [1, "two", 3.00001]
+  >>> marshaller.dump_to(struct, filepath)
+
+The `dump_to` method is in charge of writing the data in the file.
+We can load the content of this file using the `load_from` method :
+
+  >>> marshaller.load_from(filepath)
+  [1, 'two', 3.00001]
+
+We can check manually the content of the file :
+
+  >>> with open(filepath, 'r') as fd:
+  ...     fd.read()
+  '[1,"two",3.00001]'
+
+
+Streams
+--------
+
+The `dump` method is in charge writing the data in the stream.
+We can interpret the content of this stream using the `load` method.
+We use a string stream since our marshaller handles non-binary data.
+
+  >>> from io import StringIO
+  >>> stream = StringIO()
+
+  >>> marshaller.dump(struct, stream)
+  >>> stream.getvalue()
+  '[1,"two",3.00001]'
+
+We now return to the offset 0 of the file and we can load it:
+
+  >>> assert stream.seek(0) == 0
+  >>> marshaller.load(stream)
+  [1, 'two', 3.00001]

@@ -21,7 +21,7 @@ else:
 
         @staticmethod
         def load(fd):
-            return yaml.load(data, stream=fd)
+            return yaml.load(stream=fd)
 
         @staticmethod
         def dump(struct, fd):
