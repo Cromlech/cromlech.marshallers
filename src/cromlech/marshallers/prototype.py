@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import functools
+import portalocker
 
 
 class Marshaller(object):
@@ -26,17 +27,23 @@ class Marshaller(object):
         raise NotImplementedError
 
     @classmethod
-    def load_from(cls, path):
+    def load_from(cls, path, timeout=5):
         mode = cls.binary and 'rb' or 'r'
-        with open(path, mode) as fd:
-            data = cls.load(fd)
+        try:
+            with portalocker.Lock(path, mode=mode, timeout=timeout) as fd:
+                data = cls.load(fd)
+        except portalocker.exceptions.LockException:
+            raise OSError('Resource is busy and could not be freed.')
         return data
 
     @classmethod
-    def dump_to(cls, data, path):
+    def dump_to(cls, data, path, timeout=5):
         mode = cls.binary and 'wb' or 'w'
-        with open(path, mode) as fd:
-            cls.dump(data, fd)
+        try:
+            with portalocker.Lock(path, mode=mode, timeout=timeout) as fd:
+                cls.dump(data, fd)
+        except portalocker.exceptions.LockException:
+            raise OSError('Resource is busy and could not be freed.')
 
     def wraps(self, func):
         @functools.wraps(func)

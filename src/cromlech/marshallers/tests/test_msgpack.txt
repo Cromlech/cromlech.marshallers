@@ -120,3 +120,47 @@ We now return to the offset 0 of the file and we can load it:
   >>> assert stream.seek(0) == 0
   >>> marshaller.load(stream)
   [1, 'two', 3.00001]
+
+
+Concurrency and timeout
+-----------------------
+
+Concurrency is handled via a file lock. We use the cross-os `portalocker`
+package.
+
+For our test, let's simulate a lock in place :
+
+  >>> import portalocker
+  >>> lock = portalocker.Lock(filepath)
+  >>> assert lock.acquire()
+
+
+When we try to write to this file, we get an `OSError` raised by our
+marshaller in response of the lock timeout :
+
+  >>> import pytest
+  >>> with pytest.raises(IOError) as timeout:
+  ...     marshaller.dump_to(struct, filepath, timeout=0)
+  >>> timeout.value
+  OSError('Resource is busy and could not be freed.',)
+
+
+Once we release the problematic timeout, we can write :
+
+  >>> lock.release()
+  >>> marshaller.dump_to(struct, filepath, timeout=0)
+
+
+The same happens with the read :
+
+  >>> assert lock.acquire()
+  >>> with pytest.raises(IOError) as timeout:
+  ...     marshaller.load_from(filepath, timeout=0)
+  >>> timeout.value
+  OSError('Resource is busy and could not be freed.',)
+
+  >>> lock.release()
+  >>> assert marshaller.load_from(filepath, timeout=0) == struct
+
+Please note that the read/write are tied by the same lock. You can't read
+and write at the same time.

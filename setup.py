@@ -11,6 +11,7 @@ tests_require = [
 
 install_requires = [
     'setuptools',
+    'portalocker >= 1.1.0',
 ]
 
 yaml_requires = [
