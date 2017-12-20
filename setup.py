@@ -34,7 +34,7 @@ bson_requires = [
 setup(name='cromlech.marshallers',
       version=version,
       description="A collection of data marshallers for various generic uses",
-      long_description=open("README.md").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
         "Programming Language :: Python",
