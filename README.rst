@@ -54,7 +54,7 @@ order to marshal the result of a function or method :
 
 You can read the detailed documentation  
 
-`here <file://./src/cromlech/marshallers/tests>`_
+`here <./src/cromlech/marshallers/tests>`_
 
 In general Cromlech has great detailed documentation, but it is all hidden in the 
 doc tests.  So always look for it there. 
