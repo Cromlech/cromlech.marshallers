@@ -53,7 +53,6 @@ order to marshal the result of a function or method :
 
 
 You can read the detailed documentation  
-
 `here <./src/cromlech/marshallers/tests>`_
 
 In general Cromlech has great detailed documentation, but it is all hidden in the 
