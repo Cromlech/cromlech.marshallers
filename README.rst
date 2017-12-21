@@ -52,8 +52,5 @@ order to marshal the result of a function or method :
    ...     return 'world'
 
 
-You can read the detailed documentation  
+You can read the detailed usages
 `here <./src/cromlech/marshallers/tests>`_
-
-In general Cromlech has great detailed documentation, but it is all hidden in the 
-doc tests.  So always look for it there. 
