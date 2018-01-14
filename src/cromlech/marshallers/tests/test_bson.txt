@@ -31,8 +31,9 @@ Non-basic types
 
 As for now, the BSON marshaller can convert datetime but not date.
 
+  >>> from pytz import timezone
   >>> from datetime import datetime
-  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25)
+  >>> mydatetime = datetime(2017, 12, 19, 11, 30, 25, tzinfo=timezone('GMT'))
 
   >>> structure = {
   ...    'datetime': mydatetime,
