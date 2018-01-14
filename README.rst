@@ -1,8 +1,17 @@
 cromlech.marshallers
 ====================
 
-`cromlech.marshallers` provides a collection of independant
-uniformized marshallers, to use in data manipulation and persistence.
+`cromlech.marshallers` provides ways to convert 
+data between Python objects and other formats. 
+
+Currently, `cromlech.marshallers` supports :
+
+  - JSON (native & RapidJSON)
+  - pickle (native)
+  - marshal (native)
+  - msgpack
+  - YAML
+  - BSON
 
 Marshallers using third party libraries use conditionnal import.
 Check the `setup.py` `extra_requires` to include them transparently.
@@ -43,14 +52,5 @@ order to marshal the result of a function or method :
    ...     return 'world'
 
 
-Current available marshallers
------------------------------
-
-Currently, `cromlech.marshallers` provides :
-
-  - JSON (native & RapidJSON)
-  - pickle (native)
-  - marshal (native)
-  - msgpack
-  - YAML
-  - BSON
+You can read the detailed usages
+`here <./src/cromlech/marshallers/tests>`_
