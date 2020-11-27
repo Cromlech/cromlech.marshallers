@@ -17,7 +17,7 @@ Pickle can handle most of the python native structures.
 
   >>> data = marshaller.dumps({'test': 'this is a test'})
   >>> data
-  b'\x80\x03}q\x00X\x04\x00\x00\x00testq\x01X\x0e\x00\x00\x00this is a testq\x02s.'
+  b'\x80\x04\x95\x1c\x00\x00\x00\x00\x00\x00\x00}\x94\x8c\x04test\x94\x8c\x0ethis is a test\x94s.'
 
   >>> marshaller.loads(data)
   {'test': 'this is a test'}
@@ -37,7 +37,7 @@ Our usual date/datetime test is trivial for Pickle :
 
   >>> data = marshaller.dumps(structure)
   >>> data
-  b'\x80\x03}q\x00X\x08\x00\x00\x00datetimeq\x01cdatetime\ndatetime\nq\x02C\n\x07\xe1\x0c\x13\x0b\x1e\x19\x00\x00\x00q\x03\x85q\x04Rq\x05s.'
+  b'\x80\x04\x95/\x00\x00\x00\x00\x00\x00\x00}\x94\x8c\x08datetime\x94h\x01\x8c\x08datetime\x94\x93\x94C\n\x07\xe1\x0c\x13\x0b\x1e\x19\x00\x00\x00\x94\x85\x94R\x94s.'
 
   >>> marshaller.loads(data)
   {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
@@ -56,7 +56,7 @@ We can use the marshaller as a decorator :
   <function my_renderer at ...>
 
   >>> my_renderer()
-  b'\x80\x03}q\x00X\x05\x00\x00\x00threeq\x01G@(J=p\xa3\xd7\ns.'
+  b'\x80\x04\x95\x15\x00\x00\x00\x00\x00\x00\x00}\x94\x8c\x05three\x94G@(J=p\xa3\xd7\ns.'
 
   >>> marshaller.loads(my_renderer())
   {'three': 12.145}
@@ -82,7 +82,7 @@ We can check manually the content of the file :
 
   >>> with open(filepath, 'rb') as fd:
   ...     fd.read()
-  b'\x80\x03}q\x00X\x0c\x00\x00\x00almost_threeq\x01G@\x08\x00\x05>-b9s.'
+  b'\x80\x04\x95\x1c\x00\x00\x00\x00\x00\x00\x00}\x94\x8c\x0calmost_three\x94G@\x08\x00\x05>-b9s.'
 
 
 Streams
@@ -97,7 +97,7 @@ We use a bytes stream since our marshaller handles binary data.
 
   >>> marshaller.dump(struct, stream)
   >>> stream.getvalue()
-  b'\x80\x03}q\x00X\x0c\x00\x00\x00almost_threeq\x01G@\x08\x00\x05>-b9s.'
+  b'\x80\x04\x95\x1c\x00\x00\x00\x00\x00\x00\x00}\x94\x8c\x0calmost_three\x94G@\x08\x00\x05>-b9s.'
 
 We now return to the offset 0 of the file and we can load it:
 
@@ -126,7 +126,7 @@ marshaller in response of the lock timeout :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.dump_to(struct, filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
 
 Once we release the problematic timeout, we can write :
@@ -141,7 +141,7 @@ The same happens with the read :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.load_from(filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
   >>> lock.release()
   >>> assert marshaller.load_from(filepath, timeout=0) == struct

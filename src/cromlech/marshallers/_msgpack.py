@@ -20,18 +20,18 @@ else:
         @staticmethod
         def loads(string):
             return msgpack.unpackb(
-                string, object_hook=decode_custom, encoding='utf-8')
+                string, object_hook=decode_custom, raw=False)
 
         @staticmethod
         def dumps(struct):
             return msgpack.packb(
                 struct, default=encode_custom, use_bin_type=True)
-    
+
         @staticmethod
         def load(fd):
             data = fd.read()
             return msgpack.unpackb(
-                data, object_hook=decode_custom, encoding='utf-8')
+                data, object_hook=decode_custom, raw=False)
 
         @staticmethod
         def dump(struct, fd):

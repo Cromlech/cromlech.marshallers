@@ -13,7 +13,7 @@ else:
 
         @staticmethod
         def loads(string):
-            return yaml.load(string)
+            return yaml.load(string, Loader=yaml.FullLoader)
 
         @staticmethod
         def dumps(struct):
@@ -21,7 +21,7 @@ else:
 
         @staticmethod
         def load(fd):
-            return yaml.load(stream=fd)
+            return yaml.load(stream=fd, Loader=yaml.FullLoader)
 
         @staticmethod
         def dump(struct, fd):

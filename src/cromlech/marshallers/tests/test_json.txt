@@ -142,7 +142,7 @@ marshaller in response of the lock timeout :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.dump_to(struct, filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
 
 Once we release the problematic timeout, we can write :
@@ -157,7 +157,7 @@ The same happens with the read :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.load_from(filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
   >>> lock.release()
   >>> assert marshaller.load_from(filepath, timeout=0) == struct

@@ -18,7 +18,7 @@ packages, we use the `dumps` and `loads` to handle strings.
 
   >>> data = marshaller.dumps({'test': 'this is a test'})
   >>> data
-  '{test: this is a test}\n'
+  'test: this is a test\n'
 
   >>> marshaller.loads(data)
   {'test': 'this is a test'}
@@ -39,7 +39,7 @@ Our usual date/datetime test is trivial for YAML :
 
   >>> data = marshaller.dumps(structure)
   >>> data
-  "{datetime: !!timestamp '2017-12-19 11:30:25'}\n"
+  'datetime: 2017-12-19 11:30:25\n'
 
   >>> marshaller.loads(data)
   {'datetime': datetime.datetime(2017, 12, 19, 11, 30, 25)}
@@ -58,7 +58,7 @@ We can use the marshaller as a decorator :
   <function my_renderer at ...>
 
   >>> my_renderer()
-  '{three: 12.145}\n'
+  'three: 12.145\n'
 
   >>> marshaller.loads(my_renderer())
   {'three': 12.145}
@@ -92,7 +92,7 @@ We can check manually the content of the file :
 
   >>> with open(filepath, 'r') as fd:
   ...     fd.read()
-  '[1, two, 3.00001]\n'
+  '- 1\n- two\n- 3.00001\n'
 
 
 Streams
@@ -107,7 +107,7 @@ We use a string stream since our marshaller handles non-binary data.
 
   >>> marshaller.dump(struct, stream)
   >>> stream.getvalue()
-  '[1, two, 3.00001]\n'
+  '- 1\n- two\n- 3.00001\n'
 
 We now return to the offset 0 of the file and we can load it:
 
@@ -136,7 +136,7 @@ marshaller in response of the lock timeout :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.dump_to(struct, filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
 
 Once we release the problematic timeout, we can write :
@@ -151,7 +151,7 @@ The same happens with the read :
   >>> with pytest.raises(IOError) as timeout:
   ...     marshaller.load_from(filepath, timeout=0)
   >>> timeout.value
-  OSError('Resource is busy and could not be freed.',)
+  OSError('Resource is busy and could not be freed.')
 
   >>> lock.release()
   >>> assert marshaller.load_from(filepath, timeout=0) == struct

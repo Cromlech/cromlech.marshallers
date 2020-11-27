@@ -5,11 +5,6 @@ from setuptools import setup, find_packages
 
 version = '0.1'
 
-tests_require = [
-    'pytz',
-    'pytest',
-]
-
 install_requires = [
     'setuptools',
     'portalocker >= 1.1.0',
@@ -29,6 +24,15 @@ msgpack_requires = [
 
 bson_requires = [
     'bson >= 0.5.0',
+]
+
+tests_require = [
+    *yaml_requires,
+    *rapidjson_requires,
+    *msgpack_requires,
+    *bson_requires,
+    'pytz',
+    'pytest',
 ]
 
 
