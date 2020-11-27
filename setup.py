@@ -7,23 +7,23 @@ version = '0.1'
 
 install_requires = [
     'setuptools',
-    'portalocker >= 1.1.0',
+    'portalocker >= 2.0',
 ]
 
 yaml_requires = [
-    'PyYAML >= 3.12',
+    'PyYAML >= 5.3',
 ]
 
 rapidjson_requires = [
-    'python-rapidjson >= 0.2.7',
+    'python-rapidjson >= 0.9.0',
 ]
 
 msgpack_requires = [
-    'msgpack-python >= 0.4.8',
+    'msgpack-python >= 0.5.0',
 ]
 
 bson_requires = [
-    'bson >= 0.5.0',
+    'bson >= 0.5.10',
 ]
 
 tests_require = [
